@@ -1,17 +1,27 @@
 import json
 import os
+from subprocess import check_output
+
+USER_DIRS = [
+    check_output(["xdg-user-dir", "DOCUMENTS"])[:-1].decode("utf-8"),
+    check_output(["xdg-user-dir", "PICTURES"])[:-1].decode("utf-8"),
+    check_output(["xdg-user-dir", "MUSIC"])[:-1].decode("utf-8"),
+    check_output(["xdg-user-dir", "VIDEOS"])[:-1].decode("utf-8"),
+]
+
+FILE_EXTENSIONS = [
+    ["pdf", "odt", "doc", "docx", "csv", "ods", "xls", "xlsx"],
+    ["png", "jpeg", "jpg", "gif", "webp", "svg"],
+    ["mp3", "wav", "ogg"],
+    ["mp4", "avi", "wmv", "mov", "flv", "mkv", "webm"],
+]
 
 
 def setup():
-    HOME = os.environ.get("HOME")
+    HOME = check_output(["xdg-user-dir"])[:-1].decode("utf-8")
     CONFIG_PATH = f"{HOME}/.config/downloads-organizer"
 
-    default_json = {
-        "Documentos": ["pdf", "odt", "doc", "docx", "csv", "ods", "xls", "xlsx"],
-        "Imagens": ["png", "jpeg", "jpg", "gif", "webp", "svg"],
-        "Músicas": ["mp3", "wav", "ogg"],
-        "Vídeos": ["mp4", "avi", "wmv", "mov", "flv", "mkv", "webm"],
-    }
+    default_json = dict(zip(USER_DIRS, FILE_EXTENSIONS))
 
     config_json = json.dumps(default_json, indent=2)
 

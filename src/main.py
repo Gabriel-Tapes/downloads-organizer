@@ -18,8 +18,6 @@ files = [
 
 for file in files:
     folder = classify_file(file)
-    if not os.path.exists(f"{HOME}/{folder}"):
-        os.mkdir(f"{HOME}/{folder}")
     move(file, folder)
 
 print("Done oganizing Downloads files")

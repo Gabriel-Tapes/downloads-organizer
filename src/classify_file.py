@@ -1,7 +1,7 @@
-import json
-from os import environ
+from json import load
+from subprocess import check_output
 
-HOME = environ.get("HOME")
+HOME = check_output(["xdg-user-dir"])[:-1].decode("utf-8")
 
 
 def classify_file(file: str):
@@ -9,8 +9,8 @@ def classify_file(file: str):
     with open(
         f"{HOME}/.config/downloads-organizer/config.json", "r", encoding="utf-8"
     ) as config_file:
-        config = json.load(config_file)
+        config = load(config_file)
         for folder in config:
             if file_extension in config[folder]:
                 return folder
-        return "Área de trabalho"
+        return check_output(["xdg-user-dir", "DESKTOP"])[0:-1].decode("utf-8")
